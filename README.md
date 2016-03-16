@@ -3,3 +3,5 @@ This app uses github api to get data from a specifc user repo. Then it parses al
 
 
 Type the github user name in user name section, then the repo name then the directory name or file name if its in root folder.
+
+![alt text](screenshots/screenshot.jpg "screenshot")
