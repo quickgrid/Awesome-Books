@@ -8,4 +8,4 @@ https://awesome-books.firebaseapp.com/
 
 Type the github user name in user name section, then the repo name then the directory name or file name if its in root folder.
 
-![alt text](screenshots/screenshot.png "screenshot")
+![alt text](screenshots/screen.png "screenshot")
