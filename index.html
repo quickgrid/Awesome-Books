@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="list all the pdf books listed in a github repo and view them">
+    <meta name="author" content="Asif Ahmed">
+    <link rel="icon" href="requirements/favicon.ico">
+
+    <title>QGrid List and View</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="requirements/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="requirements/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="requirements/assets/js/ie8-bookUrlListponsive-file-warning.js"></script><![endif]-->
+    <script src="requirements/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and bookUrlListpond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/bookUrlListpond/1.4.2/bookUrlListpond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body  onload="onload();">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Book App</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Help</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+
+<form class="navbar-form navbar-right">
+          <input type="text" name="enter" class="form-control" value="" id="github_user_name" placeholder="user name"/>
+                    <input type="text" name="enter" class="form-control" value="" id="github_repo_name" placeholder="repo name"/>
+                              <input type="text" name="enter" class="form-control" value="" id="github_directory_name" placeholder="directory name"/>
+          <input type="button" class="btn btn-primary" value="click" onclick="processPage();"/>
+        </form>
+
+
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar" id="bookList">
+            <li class="active"><a href="#">Book List <span class="sr-only">(current)</span></a></li>
+          </ul>
+        </div>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div id="readerBody">
+
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+        var link1 = "";
+        var github_user_name;
+        var github_repo_name;
+        var github_directory_name;
+
+        function onload() {
+            github_user_name = document.getElementById('github_user_name');
+            github_repo_name = document.getElementById('github_repo_name');
+            github_directory_name = document.getElementById('github_directory_name');
+        }
+
+        var str = "";
+        function setstr(str){
+          showTextData(str);
+        }
+
+        function processPage(){
+                    //alert(page_name_input.value);
+
+            //var url = page_name_input.value;
+            //var url = "https://api.github.com/repos/vhf/free-programming-books/contents/free-programming-books.md";
+            //var url = "https://api.github.com/repos/quickgrid/free-programming-books/contents/free-programming-books.md";
+
+            var url = "https://api.github.com/repos/" + github_user_name.value + "/" + github_repo_name.value + "/" + "contents" + github_directory_name.value;
+
+            $.getJSON(url, function(data){
+
+//                  $("#bookList").append(data.download_url);
+                  var page_content_link = data.download_url;
+                  setstr(page_content_link);
+            });
+        }
+
+
+        var bookUrlList;
+        var curlink;
+
+        function setBookUrlList(linksent){
+          curlink = linksent;
+        }
+
+
+        function getBookUrlList(){
+          return curlink;
+        }
+
+
+
+        function showTextData(link1){
+
+          $.get(link1, {}, function(content){
+
+              var i;
+              bookUrlList = content.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}.pdf/g);
+//console.log(bookUrlList);
+              setBookUrlList(bookUrlList);
+
+              //get the filename from url in reverse order then fix it
+              for(i=0; i < bookUrlList.length; i++){
+                  var fname = bookUrlList[i].match(/[a-zA-Z0-9_-]+\.pdf/g);
+                  // add the name to modal body with the link in anchor tag
+                  $("#bookList").append("<li><a value=\""+i+"\" >"+fname+"</a></li>");
+                  //console.log(fname);
+              }
+
+          }, "html");
+
+        }
+
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="requirements/assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="requirements/dist/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+
+      $(document).on("click","#bookList a", function () {
+        //console.log("clicked");
+         var clickedBtnID = $(this).attr('value'); // or var clickedBtnID = this.id
+         //alert('you clicked on button #' + clickedBtnID);
+         //console.log( getBookUrlList()[clickedBtnID] );
+
+        $("#readerBody").html("<iframe src=\"http://docs.google.com/gview?url="+getBookUrlList()[clickedBtnID]+"&embedded=true\" style=\"width:718px; height:700px;\" frameborder=\"0\"></iframe>");
+
+      });
+</script>
+
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="requirements/assets/js/vendor/holder.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="requirements/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+
+
+  </body>
+</html>
