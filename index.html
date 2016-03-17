@@ -58,7 +58,7 @@
           <input type="text" name="enter" class="form-control" value="" id="github_user_name" placeholder="user name"/>
                     <input type="text" name="enter" class="form-control" value="" id="github_repo_name" placeholder="repo name"/>
                               <input type="text" name="enter" class="form-control" value="" id="github_directory_name" placeholder="directory name"/>
-          <input type="button" class="btn btn-primary" value="click" onclick="processPage();"/>
+          <input type="button" class="btn btn-primary" value="Search" onclick="processPage();"/>
         </form>
 
 
@@ -107,14 +107,20 @@
             //var url = "https://api.github.com/repos/vhf/free-programming-books/contents/free-programming-books.md";
             //var url = "https://api.github.com/repos/quickgrid/free-programming-books/contents/free-programming-books.md";
 
-            var url = "https://api.github.com/repos/" + github_user_name.value + "/" + github_repo_name.value + "/" + "contents" + github_directory_name.value;
+            if( github_user_name.value.length > 0 && github_repo_name.value.length > 0 && github_directory_name.value.length > 0 ){
 
-            $.getJSON(url, function(data){
+                var url = "https://api.github.com/repos/" + github_user_name.value + "/" + github_repo_name.value + "/" + "contents" + github_directory_name.value;
 
-//                  $("#bookList").append(data.download_url);
-                  var page_content_link = data.download_url;
-                  setstr(page_content_link);
-            });
+
+              $.getJSON(url, function(data){
+
+  //                  $("#bookList").append(data.download_url);
+                    var page_content_link = data.download_url;
+                    setstr(page_content_link);
+              });
+
+            }
+
         }
 
 
