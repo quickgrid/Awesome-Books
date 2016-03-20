@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="requirements/assets/js/ie8-bookUrlListponsive-file-warning.js"></script><![endif]-->
@@ -32,7 +32,7 @@
     <![endif]-->
   </head>
 
-  <body  onload="onload();">
+  <body>
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -48,18 +48,42 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="http://quickgrid.blogspot.com">by Asif Ahmed</a></li>
-            <li><a href="#">Help</a></li>
+            <li><a href="#" onclick="showGoogleLogin()">Login</a></li>
+            <li>
+              <a href="#" data-toggle="dropdown">
+                Help <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu" style="min-width:250px;padding:1em"><li>If you don't know the input just double click on the field or, use the arrow key shown in the input box.</li></ul>
+            </li>
+            <li><a href="https://github.com/quickgrid/QGrid-Github-API-Book-List-and-View-App"><i class="fa fa-github fa-lg"></i></a></li>
           </ul>
+
+     <!--
           <form class="navbar-form navbar-right">
             <input type="text" class="form-control" placeholder="Search...">
           </form>
+      -->
 
-<form class="navbar-form navbar-right">
-          <input type="text" name="enter" class="form-control" value="" id="github_user_name" placeholder="user name"/>
-                    <input type="text" name="enter" class="form-control" value="" id="github_repo_name" placeholder="repo name"/>
-                              <input type="text" name="enter" class="form-control" value="" id="github_directory_name" placeholder="directory name"/>
-          <input type="button" class="btn btn-primary" value="Search" onclick="processPage();"/>
-        </form>
+          <form class="navbar-form navbar-right">
+              <input type="text" name="enter" class="form-control" value="" id="github_user_name" placeholder="user name" list="github_user_name_list" />
+              <datalist id="github_user_name_list">
+                  <option value="vhf">
+                  <option value="quickgrid">
+              </datalist>
+
+              <input type="text" name="enter" class="form-control" value="" id="github_repo_name" placeholder="repo name" list="github_repo_name_list"/>
+              <datalist id="github_repo_name_list">
+                  <option value="free-programming-books">
+              </datalist>
+
+
+              <input type="text" name="enter" class="form-control" value="" id="github_directory_name" placeholder="directory name" list="github_directory_name_list"/>
+              <datalist id="github_directory_name_list">
+                  <option value="free-programming-books.md">
+              </datalist>
+
+              <input type="button" class="btn btn-primary" value="Search" onclick="processPage();"/>
+          </form>
 
 
         </div>
@@ -82,6 +106,27 @@
       </div>
     </div>
 
+
+    <!--Shown after user has Authenticated-->
+    <div class="modal" id="AuthenticatedModal" data-backdrop="static">
+    	<div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h4 class="modal-title">Authenticated</h4>
+            </div><div class="container"></div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+              <a href="#" data-dismiss="modal" class="btn">Close</a>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+
     <script type="text/javascript">
 
         var link1 = "";
@@ -89,23 +134,22 @@
         var github_repo_name;
         var github_directory_name;
 
-        function onload() {
-            github_user_name = document.getElementById('github_user_name');
-            github_repo_name = document.getElementById('github_repo_name');
-            github_directory_name = document.getElementById('github_directory_name');
-        }
-
         var str = "";
         function setstr(str){
           showTextData(str);
         }
 
-        function processPage(){
-                    //alert(page_name_input.value);
 
+        function processPage(){
             //var url = page_name_input.value;
             //var url = "https://api.github.com/repos/vhf/free-programming-books/contents/free-programming-books.md";
             //var url = "https://api.github.com/repos/quickgrid/free-programming-books/contents/free-programming-books.md";
+
+
+            github_user_name = document.getElementById('github_user_name');
+            github_repo_name = document.getElementById('github_repo_name');
+            github_directory_name = document.getElementById('github_directory_name');
+
 
             if( github_user_name.value.length > 0 && github_repo_name.value.length > 0 && github_directory_name.value.length > 0 ){
 
@@ -113,8 +157,6 @@
 
 
               $.getJSON(url, function(data){
-
-  //                  $("#bookList").append(data.download_url);
                     var page_content_link = data.download_url;
                     setstr(page_content_link);
               });
@@ -144,7 +186,6 @@
 
               var i;
               bookUrlList = content.match(/https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}.pdf/g);
-//console.log(bookUrlList);
               setBookUrlList(bookUrlList);
 
               //get the filename from url in reverse order then fix it
@@ -168,25 +209,43 @@
     <script>window.jQuery || document.write('<script src="requirements/assets/js/vendor/jquery.min.js"><\/script>')</script>
     <script src="requirements/dist/js/bootstrap.min.js"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-      $(document).on("click","#bookList a", function () {
-        //console.log("clicked");
-         var clickedBtnID = $(this).attr('value'); // or var clickedBtnID = this.id
-         //alert('you clicked on button #' + clickedBtnID);
-         //console.log( getBookUrlList()[clickedBtnID] );
+          $(document).on("click","#bookList a", function () {
+            //console.log("clicked");
+             var clickedBtnID = $(this).attr('value'); // or var clickedBtnID = this.id
+             //alert('you clicked on button #' + clickedBtnID);
+             //console.log( getBookUrlList()[clickedBtnID] );
 
-        $("#readerBody").html("<iframe src=\"https://docs.google.com/gview?url="+getBookUrlList()[clickedBtnID]+"&embedded=true\" style=\"width:718px; height:700px;\" frameborder=\"0\"></iframe>");
+            $("#readerBody").html("<iframe src=\"https://docs.google.com/gview?url="+getBookUrlList()[clickedBtnID]+"&embedded=true\" style=\"width:718px; height:700px;\" frameborder=\"0\"></iframe>");
 
+          });
+    </script>
+
+
+    <script src="https://cdn.firebase.com/js/client/2.4.1/firebase.js"></script>
+
+    <script>
+
+    function showGoogleLogin(){
+      var ref = new Firebase("https://awesome-books.firebaseio.com");
+      ref.authWithOAuthPopup("google", function(error, authData) {
+          if (error) {
+            console.log("Login Failed!", error);
+          } else {
+            //console.log("Authenticated successfully with QGrid App:", authData);
+            $('.modal-body').append("successfully logged in as " + authData.google.displayName + ".");
+            $('#AuthenticatedModal').modal('toggle');
+          }
       });
-</script>
+    }
+    </script>
+
 
     <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
     <script src="requirements/assets/js/vendor/holder.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="requirements/assets/js/ie10-viewport-bug-workaround.js"></script>
-
-
 
   </body>
 </html>
