@@ -2,7 +2,7 @@
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/quickgrid/Awesome-Books?style=flat-square)
 
-## UPDATE: Seems something in github API changed as this longer works. Changing to appropriate API call should make the code work without requiring many changes.
+## UPDATE: It seems to work. First enter username, second repo name, lastly the markdown *.md file path in the input boxes. Ex: `quickgrid`, `ai-resources`, `papers.md`.
 
 This app uses github api to get data from a specifc user repo. Then it parses all the pdf links in them and show them in list. User can click on any book name to view it instantly.
 
